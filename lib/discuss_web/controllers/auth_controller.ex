@@ -22,11 +22,11 @@ defmodule DiscussWeb.AuthController do
         conn
         |> put_flash(:info, "You have been signed in.")
         |> put_session(:user_id, user.id)
-        |> redirect(to: topic_path(conn, :index))
+        |> redirect(to: Routes.topic_path(conn, :index))
       {:error, _reason} ->
         conn
         |> put_flash(:error, "Error signing in.")
-        |> redirect(to: topic_path(conn, :index))
+        |> redirect(to: Routes.topic_path(conn, :index))
      end
   end
 
