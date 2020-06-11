@@ -1,4 +1,4 @@
-// NOTE: The contents of this file will only be executed if
+ // NOTE: The contents of this file will only be executed if
 // you uncomment its entry in "assets/js/app.js".
 
 // To use Phoenix channels, the first step is to import Socket,
@@ -55,9 +55,48 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
-channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+const createSocket = (id) => {
+  let channel = socket.channel(`comments:${id}`, {})
+  channel.join()  
+    .receive("ok", ({ comments }) => {
+      console.log(comments)
+       renderComments(comments)
+    })
+    .receive("error", resp => { console.log("Unable to join", resp) })
 
-export default socket
+  document.querySelector('button').addEventListener('click', () => {
+    const content = document.querySelector('textarea').value
+    if(content === '') return alert("Please enter a comment before submitting.");
+    channel.push("comment:add", {content})
+    document.querySelector('textarea').value = '' 
+  })
+
+  channel.on(`comments:${id}:new`, (e) => renderComment(e.comment))
+
+}
+ 
+const renderComments = (comments) => {
+  const renderedComments = comments.map(comment => {
+    return commentTemplate(comment)
+  })
+  document.querySelector('.collection').innerHTML= renderedComments.join('')
+}
+
+const renderComment = (comment) => {
+  const renderedComment = commentTemplate(comment)
+  document.querySelector('.collection').innerHTML += renderedComment
+}
+
+const commentTemplate = (comment) => {
+  let email = comment?.user?.email || "Anonymous"
+  return `
+  <li class="collection-item"> 
+   ${comment.content}
+   <div class="secondary-content">
+    ${email}
+   </div>
+  </li> 
+  `
+}
+
+window.createSocket = createSocket
