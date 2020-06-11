@@ -2,7 +2,7 @@
 
 <div class="input-field">
 <textarea class="materialize-textarea"></textarea>
-<button class="btn" <%= if !@conn.assigns.user do "disabled" end %>>Add Comment</button>
+<button class="btn" <%= if !@conn.assigns[:user] do "disabled" end %>>Add Comment</button>
 <ul class="collection">
 </ul>
 </div>

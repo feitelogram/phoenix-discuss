@@ -59,7 +59,6 @@ const createSocket = (id) => {
   let channel = socket.channel(`comments:${id}`, {})
   channel.join()  
     .receive("ok", ({ comments }) => {
-      console.log(comments)
        renderComments(comments)
     })
     .receive("error", resp => { console.log("Unable to join", resp) })
@@ -88,7 +87,7 @@ const renderComment = (comment) => {
 }
 
 const commentTemplate = (comment) => {
-  let email = comment?.user?.email || "Anonymous"
+  let email = comment?.user?.email.split("@")[0] || "Anonymous"
   return `
   <li class="collection-item"> 
    ${comment.content}
