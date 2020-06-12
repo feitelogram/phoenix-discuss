@@ -14,8 +14,10 @@
     <% end %>
 </ul>
 
+<%= if @conn.assigns[:user] do%>
 <div class="fixed-action-btn">
     <%= link to: Routes.topic_path(@conn, :new), class: "btn-floating tn-large waves-effect waves-light red" do %>
     <i class="material-icons">add</i>
     <% end %>
  </div>
+ <% end%>
